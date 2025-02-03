@@ -4,7 +4,7 @@ from tensorflow.keras.models import load_model
 from sklearn.preprocessing import LabelEncoder
 
 # โหลดโมเดลที่บันทึกไว้
-model = load_model('/Users/gam/Desktop/RNN/emotion_recognition_model.h5')
+model = load_model('/Users/gam/Desktop/DEEP/Woekshop#3/emotion_recognition_model.h5')
 
 # โหลด LabelEncoder เดิม (ต้องใช้ encoder ตัวเดียวกับตอนเทรน)
 emotion_labels = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'ps', 'sad']  # ปรับตาม Dataset
@@ -21,10 +21,10 @@ def extract_features(file_path, max_pad_len=100):
             mfccs = np.pad(mfccs, pad_width=((0, 0), (0, pad_width)), mode='constant')
         else:
             mfccs = mfccs[:, :max_pad_len]
-        return mfccs.T  # เปลี่ยนจาก (60, 100) → (100, 60)
+        return mfccs
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
-        return None
+        return np.zeros((14, max_pad_len))
 
 # ปรับขนาด input ตอนทำนายให้ตรงกับโมเดล
 def predict_emotion(file_path):
@@ -41,13 +41,10 @@ def predict_emotion(file_path):
     return predicted_emotion, prediction[0]
 
 # เรียกใช้ฟังก์ชันทำนาย
-audio_file_path = '/Users/gam/Desktop/DEEP/Woekshop#3/DATASET/TESS Toronto emotional speech set data/Sad/OAF_calm_sad.wav'
+audio_file_path = '/Users/gam/Desktop/DEEP/Woekshop#3/DATASET/TESS Toronto emotional speech set data/disgust/OAF_bar_disgust.wav'
 emotion, probabilities = predict_emotion(audio_file_path)
 
 if emotion != "Error":
     print(f"อารมณ์ที่ทำนายได้: {emotion}")
-    print(f"ความน่าจะเป็นแต่ละอารมณ์: {probabilities}")
 else:
     print("ไม่สามารถทำนายอารมณ์ได้")
-    
-    
